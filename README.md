@@ -1,9 +1,9 @@
 # 🚀 DevOps CA2 — TalentLink Project
 Group Members:
-22070122213: Sneha Padgaonkar'
-22070122230: Swapnaja Paikrao'
-23070122501: Akash Pandit'
-23070122503: Atharva Pachunde' 
+22070122213: Sneha Padgaonkar
+22070122230: Swapnaja Paikrao
+23070122501: Akash Pandit
+23070122503: Atharva Pachunde
 
 ## 📌 Project Overview
 This repository demonstrates the **complete DevOps pipeline** for the *TalentLink* Node.js web application — covering CI/CD, IaC, Containerization, Orchestration, and Monitoring.
