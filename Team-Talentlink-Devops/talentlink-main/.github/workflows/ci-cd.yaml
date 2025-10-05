@@ -5,7 +5,6 @@ on:
     branches: [ main ]
   pull_request:
 
-# Image will be pushed to GitHub Container Registry (GHCR)
 env:
   IMAGE: ghcr.io/${{ github.repository }}/talentlink:latest
 
@@ -14,7 +13,7 @@ jobs:
     name: Build & Push Docker Image
     runs-on: ubuntu-latest
     permissions:
-      packages: write    # needed for GHCR
+      packages: write
       contents: read
     steps:
       - name: Checkout repo
@@ -24,35 +23,47 @@ jobs:
         run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build image
-        run: docker build -t $IMAGE ./talentlink-main
+        run: docker build -t $IMAGE ./Team-TalentLink-DevOps/talentlink-main
 
       - name: Push image
         run: docker push $IMAGE
 
-      - name: Publish pipeline diagram (artifact)
+      - name: Upload pipeline diagram
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pipeline-diagram
-          path: ./talentlink-main/diagrams/pipeline.mmd
+          path: ./Team-TalentLink-DevOps/talentlink-main/diagrams/pipeline.mmd
 
-  # OPTIONAL deploy job (enable when you have a K8s cluster + kubeconfig)
   deploy:
     name: Deploy to Kubernetes
     needs: build-and-push
     runs-on: ubuntu-latest
-    if: ${{ secrets.KUBE_CONFIG != '' }}
+    env:
+      KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG }}   # <- we can read secrets at STEP level via env
     steps:
       - uses: actions/checkout@v4
+
+      - name: Skip deploy if KUBE_CONFIG not set
+        if: ${{ env.KUBE_CONFIG_B64 == '' }}
+        run: echo "KUBE_CONFIG secret not set; skipping deploy."
+
       - name: Setup kubectl
+        if: ${{ env.KUBE_CONFIG_B64 != '' }}
         uses: azure/setup-kubectl@v4
+
       - name: Load kubeconfig
+        if: ${{ env.KUBE_CONFIG_B64 != '' }}
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > $HOME/.kube/config
+          echo "$KUBE_CONFIG_B64" | base64 -d > $HOME/.kube/config
+
       - name: Apply manifests
+        if: ${{ env.KUBE_CONFIG_B64 != '' }}
         run: |
-          kubectl apply -f ./talentlink-main/k8s/namespace.yaml
-          kubectl apply -f ./talentlink-main/k8s/deployment.yaml
-          kubectl apply -f ./talentlink-main/k8s/service.yaml
+          kubectl apply -f ./Team-TalentLink-DevOps/talentlink-main/k8s/namespace.yaml
+          kubectl apply -f ./Team-TalentLink-DevOps/talentlink-main/k8s/deployment.yaml
+          kubectl apply -f ./Team-TalentLink-DevOps/talentlink-main/k8s/service.yaml
+
       - name: Wait for rollout
+        if: ${{ env.KUBE_CONFIG_B64 != '' }}
         run: kubectl -n pbl-devops rollout status deploy/talentlink
