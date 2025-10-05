@@ -5,6 +5,8 @@ Group Members:
 23070122501: Akash Pandit
 23070122503: Atharva Pachunde
 
+Project Access Link: https://talentlinkweb.vercel.app/
+
 ## 📌 Project Overview
 This repository demonstrates the **complete DevOps pipeline** for the *TalentLink* Node.js web application — covering CI/CD, IaC, Containerization, Orchestration, and Monitoring.
 
