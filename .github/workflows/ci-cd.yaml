@@ -5,10 +5,9 @@ on:
     branches: [ main ]
   pull_request:
 
-# manually set lowercase repo name
 env:
-  OWNER: atharvapachunde        # your GitHub username (all lowercase)
-  REPO: ca2-213-230-501-503     # repo name in all lowercase
+  OWNER: atharvapachunde        # your GitHub username (lowercase)
+  REPO: ca2-213-230-501-503     # your repo name (lowercase)
   IMAGE_NAME: talentlink
 
 jobs:
@@ -22,11 +21,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Build Docker image
+        working-directory: Team-Talentlink-Devops/talentlink-main
+        run: |
+          echo "Building from: $(pwd)"
+          docker build -t ghcr.io/${{ env.OWNER }}/${{ env.REPO }}/${{ env.IMAGE_NAME }}:latest .
+
       - name: Log in to GHCR
         run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Build Docker image
-        run: docker build -t ghcr.io/${{ env.OWNER }}/${{ env.REPO }}/${{ env.IMAGE_NAME }}:latest ./Team-TalentLink-DevOps/talentlink-main
 
       - name: Push Docker image
         run: docker push ghcr.io/${{ env.OWNER }}/${{ env.REPO }}/${{ env.IMAGE_NAME }}:latest
@@ -36,4 +38,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pipeline-diagram
-          path: ./Team-TalentLink-DevOps/talent
+          path: Team-Talentlink-Devops/talentlink-main/diagrams/pipeline.mmd
