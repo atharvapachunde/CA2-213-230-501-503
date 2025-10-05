@@ -2,26 +2,19 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Install deps
-COPY package*.json ./
-RUN npm ci
+# Copy manifest(s)
+COPY package.json ./
+# Copy whichever lockfiles you might have (optional)
+COPY package-lock.json* ./
+COPY pnpm-lock.yaml* ./
+
+# Install deps (prefer npm ci if lockfile exists; otherwise install)
+RUN if [ -f package-lock.json ]; then \
+      echo "Using npm ci (package-lock.json found)"; npm ci; \
+    else \
+      echo "No package-lock.json; running npm install"; npm install; \
+    fi
 
 # Build app
 COPY . .
 RUN npm run build
-
-# ---- Runtime stage ----
-FROM node:20-alpine
-ENV NODE_ENV=production
-WORKDIR /app
-
-# Copy runtime artifacts from builder
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/.next ./\.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
-# If your config is JS instead of MJS, change the next line accordingly
-COPY --from=builder /app/next.config.mjs ./next.config.mjs
-
-EXPOSE 3000
-CMD ["npx", "next", "start", "-p", "3000"]
