@@ -1,9 +1,14 @@
 # 🚀 DevOps CA2 — TalentLink Project
 Group Members:
+
 22070122213: Sneha Padgaonkar
+
 22070122230: Swapnaja Paikrao
+
 23070122501: Akash Pandit
+
 23070122503: Atharva Pachunde
+
 
 Project Access Link: https://talentlinkweb.vercel.app/
 
