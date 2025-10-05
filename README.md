@@ -1,4 +1,9 @@
 # 🚀 DevOps CA2 — TalentLink Project
+Group Members:
+22070122213: Sneha Padgaonkar
+22070122230: Swapnaja Paikrao
+23070122501: Akash Pandit
+23070122503: Atharva Pachunde 
 
 ## 📌 Project Overview
 This repository demonstrates the **complete DevOps pipeline** for the *TalentLink* Node.js web application — covering CI/CD, IaC, Containerization, Orchestration, and Monitoring.
@@ -89,7 +94,6 @@ All steps are implemented according to the **DevOps CA2 Rubrics**, using:
 | **Challenges Faced** | Build errors (missing `package-lock.json`), GitHub image naming (uppercase issue), YAML structure validation |
 | **Lessons Learned** | Understood DevOps flow end-to-end — automation, orchestration, monitoring setup |
 | **Future Scope** | Integrate real Prometheus + Grafana dashboard, deploy on AWS EKS or Minikube cluster |
-
 
 
 
