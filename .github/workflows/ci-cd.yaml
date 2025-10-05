@@ -6,7 +6,7 @@ on:
   pull_request:
 
 env:
-  IMAGE: ghcr.io/${{ github.repository }}/talentlink:latest
+  IMAGE: ghcr.io/${{ toLower(github.repository) }}/talentlink:latest
 
 jobs:
   build-and-push:
